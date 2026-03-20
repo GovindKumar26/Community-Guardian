@@ -2,7 +2,8 @@
 **Candidate Name**: Govind Kumar
 **Scenario Chosen**: Community Safety & Digital Wellness (Neighborhood Resilience)
 **Estimated Time Spent**: ~5.5 Hours
-**Video link**: 
+**Video link**: https://youtu.be/gV1BDdBdDTs
+[![Watch the video](https://img.youtube.com/vi/gV1BDdBdDTs/0.jpg)](https://youtu.be/gV1BDdBdDTs)
 
 ---
 
@@ -31,6 +32,10 @@ npm run dev
 cd server
 npm test
 ```
+
+### Tests Included:
+- **Happy path**: Rule-based categorization, checklist generation, and digest summary verification.
+- **Edge case**: AI failure fallback ensures rule-based results return safely.
 
 ---
 
