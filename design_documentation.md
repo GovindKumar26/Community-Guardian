@@ -17,6 +17,13 @@
 4. Alert is stored, returned with actionable steps.
 5. Feed updates and optional digest generation occur on demand.
 
+### Data Flow (Edge Case: AI Unavailable)
+1. User creates an alert.
+2. Backend validates input (Zod) and attempts AI calls.
+3. AI is unavailable or returns invalid output.
+4. Rule-based categorization, summary, and checklist are generated.
+5. Alert is stored and returned with rule-based actionable steps and badges.
+
 ---
 
 ## 3. Project Vision
