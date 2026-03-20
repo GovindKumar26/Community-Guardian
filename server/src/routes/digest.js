@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Alert from '../models/Alert.js';
 import { protect } from '../middleware/auth.js';
 import { generateDigest } from '../lib/ai.js';
+import { fallbackChecklist } from '../lib/fallback.js';
 
 const router = Router();
 
@@ -32,8 +33,23 @@ router.post('/', protect, async (req, res) => {
     // Generate AI digest
     const result = await generateDigest(alerts, selectedArea, preferences);
 
+    const actionableSteps = alerts.slice(0, 5).map(alert => {
+        const steps = (alert.actionableSteps && alert.actionableSteps.length > 0)
+            ? alert.actionableSteps
+            : fallbackChecklist(alert.category).steps;
+
+        return {
+            alertId: alert._id,
+            title: alert.title,
+            category: alert.category,
+            steps: steps.slice(0, 5),
+            source: alert.aiSource || 'rule-based'
+        };
+    });
+
     res.json({
         digest: result.digest,
+        actionableSteps,
         source: result.source,
         meta: {
             location: selectedArea,

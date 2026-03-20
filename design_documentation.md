@@ -1,34 +1,43 @@
 # Design Documentation: Community Guardian
 
-## 1. High-Level Architecture
+## 1. Overview
+**Community Guardian** is an empowerment-first safety platform that reduces anxiety by turning alerts into clear, actionable steps. It is built as a lightweight SPA with a secure API layer, optional AI augmentation, and privacy-first data handling.
+
+## 2. High-Level Architecture
 **Community Guardian** follows a modern, MERN-adjacent architecture designed for independent scalability and high security.
-*   **Layer 1 (Frontend)**: A Vite-driven React 18 Single Page Application (SPA), emphasizing atomic component design and high-contrast, anxiety-reducing UI.
-*   **Layer 2 (Backend)**: A Node.js REST API with Express, acting as an orchestration layer for authentication, encryption, and AI processing.
-*   **Layer 3 (AI Engine)**: Google Gemini Flash 2.5 API, providing context-aware summaries, checklists, and scam detection with a robust rule-based local fallback.
-*   **Layer 4 (Database)**: MongoDB Atlas (NoSQL) for flexible incident modeling and secure user preference storage.
+- **Layer 1 (Frontend)**: Vite-driven React 18 SPA with atomic components and calming UI patterns.
+- **Layer 2 (Backend)**: Node.js REST API (Express) for auth, validation, encryption, and orchestration.
+- **Layer 3 (AI Engine)**: Google Gemini 2.5 Flash for summaries and checklists with a rule-based fallback.
+- **Layer 4 (Database)**: MongoDB Atlas (NoSQL) for flexible incident modeling and user preferences.
+
+### Data Flow (Happy Path)
+1. User signs in (JWT in HTTP-only cookie).
+2. User creates an alert.
+3. Backend validates input (Zod) and runs AI summarization and categorization.
+4. Alert is stored, returned with actionable steps.
+5. Feed updates and optional digest generation occur on demand.
 
 ---
 
-## 2. Project Vision
-**Community Guardian** is an empowerment-first safety platform designed to reduce the anxiety typically associated with neighborhood watch apps. By leveraging AI-driven contextual analysis and proactive security measures, it transforms scary incidents into actionable, community-led solutions.
+## 3. Project Vision
+**Community Guardian** is designed to reduce the anxiety typically associated with neighborhood watch apps. It emphasizes relevance, calm language, and clear next steps over sensationalism.
 
 ---
 
-## 3. Design Philosophy & UX
+## 4. Design Philosophy & UX
 ### Aesthetic: "Sapphire Glass"
-*   **Visual Direction**: Deep sapphire-glass backgrounds with enhanced blur (glassmorphism) and subtle accent borders.
-*   **Color Palette**: Calming teals, deep blues, and high-contrast whites/glowing-warns (instead of emergency red).
-*   **Anxiety Reduction**: Use of "Community Wins" and positive micro-animations to highlight safety successes rather than just documenting incidents.
-*   **Responsive Layout**: Mobile-first architecture with custom CSS properties for theme consistency.
+- **Visual Direction**: Soft colors and panels, soft borders, and high-contrast typography.
+- **Anxiety Reduction**: "Community Wins" and reassuring language to emphasize control and progress.
+- **Responsive Layout**: Mobile-first layout with a consistent token system in CSS.
 
 ### Core Pillars
-1.  **Contextual Relevance**: Multi-hood filtering and AI-personalized digests ensures users only see what matters.
-2.  **Empowerment**: Every alert includes an AI-generated **"Actionable Checklist"** to help users feel in control.
-3.  **Trust & Privacy**: No location tracking. Everything is neighborhood-based and private communications are fully encrypted.
+1. **Contextual Relevance**: Filtering, location scoping, and preference-driven digests.
+2. **Empowerment**: Each alert returns an actionable checklist.
+3. **Trust & Privacy**: Neighborhood-based relevance without GPS tracking; encrypted safe-circle communication.
 
 ---
 
-## 4. Technical Stack
+## 5. Technical Stack
 
 ### Frontend (React + Vite)
 *   **Framework**: React 18 with TypeScript for type safety and scalability.
@@ -48,10 +57,10 @@
     *   **Sanitization**: `express-mongo-sanitize` for NoSQL injection prevention.
 
 ### Artificial Intelligence (Google Gemini 2.5 Flash)
-*   **Summarization**: Creates non-alarmist, 2-sentence summaries of incidents.
-*   **Categorization**: Multi-incident analysis with automatic **"Scam Score"** evaluation.
-*   **Actionability**: Generates 4-7 task-specific safety steps for every community report.
-*   **Resilience**: Rule-based fallback system (keyword matching) ensures 100% uptime if AI APIs are unreachable.
+- **Summarization**: Non-alarmist summaries for incidents and digests.
+- **Categorization**: Assigns category and subcategory with a confidence score.
+- **Actionability**: Produces 4-7 task-specific safety steps.
+- **Resilience**: Keyword-based fallback keeps the product functional when AI is unavailable.
 
 ### Persistence & Storage (MongoDB Atlas)
 *   **Database**: MongoDB (NoSQL) for flexible schema design for alerts and circles.
@@ -60,16 +69,23 @@
 
 ---
 
-## 5. Key Security Implementations
-*   **Account Lockout**: (Soft lockout) Prevents brute-force login attacks by locking IDs after 5 failed attempts.
-*   **Registration Honeypot**: Invisible input fields that trap bot-based registrations without alerting the attacker.
-*   **Zero-Tracking Privacy**: We achieve contextual relevance through neighborhood selection alone—no invasive GPS or Geolocation tracking needed.
+## 6. Key Security Implementations
+- **Account Lockout**: Soft lockout after 5 failed login attempts.
+- **Registration Honeypot**: Invisible fields to catch bots.
+- **Zero-Tracking Privacy**: Neighborhood-based relevance without GPS or device tracking.
+- **Defense in Depth**: Helmet CSP, rate limiting, and NoSQL sanitization at the API layer.
+
+## 7. API and Feature Highlights
+- **Alerts**: CRUD, search, filtering, and community verification.
+- **Digests**: AI or rule-based summaries of active alerts.
+- **Safe Circles**: Encrypted member messaging with membership checks and creator controls.
 
 ---
 
-## 6. Future Enhancements
-*   **The "Safety Buddy" (Privacy Check-ins)**: A timer-based check-in system for walking home.
-*   **Neighborhood Safety Outlook**: Weekly AI trend analysis showing how safety metrics are improving.
-*   **Volunteer "Verified Guardian" Network**: Gamified roles for verified First Aid, CPR, or Security-trained residents.
-*   **AI Scammer Simulation**: Interactive "training grounds" where AI mocks common phishing attempts to educate users safely.
-*   **Digital Footprint Cleanup**: An AI tool checking for "digital leakage" and helping users harden their online privacy.
+## 8. Future Enhancements
+- **Safety Buddy**: Privacy-preserving check-in timer for solo travel.
+- **Neighborhood Outlook**: Weekly AI trend analysis for local safety.
+- **Verified Guardian Network**: Opt-in trusted volunteers for incidents.
+- **AI Scam Training**: Safe simulations for user education.
+- **Digital Footprint Cleanup**: Privacy review and remediation suggestions.
+- **Real-time notifications**: Real time alerts and notifications using websockets

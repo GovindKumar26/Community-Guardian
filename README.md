@@ -1,159 +1,65 @@
-# Community Guardian
 
-**Community Safety & Digital Wellness Platform**
-
-A calm, AI-powered platform that aggregates community safety and digital security data, filters out noise, and provides actionable safety digests. Built for Palo Alto Networks.
-
----
-
-## Problem Statement
-
-As digital and physical security threats become more complex, individuals struggle to keep up with relevant safety information. Information is scattered across news sites and social media, leading to alert fatigue or unnecessary anxiety without actionable steps.
-
-**Community Guardian** solves this by providing a single, calm, and empowering platform that uses AI to filter noise and deliver contextually relevant safety alerts with actionable checklists.
+**Candidate Name**: Govind Kumar
+**Scenario Chosen**: Community Safety & Digital Wellness (Neighborhood Resilience)
+**Estimated Time Spent**: ~5.5 Hours
 
 ---
 
-## Features
+## Quick Start
+### Prerequisites:
+*   Node.js (v18+)
+*   MongoDB Atlas (Free tier or local)
+*   Google Gemini API Key (Optional. Fallback is rule-based)
 
-### Core Features
-- **Safety Alert Dashboard** — AI-processed, filtered alerts organized by severity and category
-- **CRUD Operations** — Create, View, Update alerts + Search/Filter by category, location, severity
-- **AI-Powered Digests** — Personalized safety summaries using Google Gemini AI
-- **User Incident Submission** — Submit reports and receive AI-generated actionable checklists
-- **Privacy-First Safe Circles** — Encrypted (AES-256-CBC) emergency messaging with trusted guardians
-
-### AI Integration + Fallback
-- **AI**: Google Gemini API for categorization, summarization, and checklist generation
-- **Fallback**: Rule-based keyword matching + pre-built templates when AI is unavailable
-- **Transparency**: UI badges show "AI-Generated" vs "Rule-Based" for every result
-
-### Security & Trust
-- **AI Scam Sense** — Proactive Gemini-driven scanning to auto-flag potential scams/phishing
-- **Registration Honeypot** — Stealth bot protection to block automated account creation
-- **E2EE Circles** — AES-256-CBC encryption for private safe circle messaging
-- **Defense in Depth** — Helmet (CSP), Rate limiting, NoSQL injection prevention, HTTP-Only cookies
-- **Soft Lockout** — Protection against brute-force login attacks
-- **Input validation** — Zod schemas with strong type safety
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18 + TypeScript (Vite) |
-| Backend | Node.js + Express |
-| Database | MongoDB + Mongoose |
-| AI | Google Gemini API |
-| Validation | Zod |
-| Auth | JWT + bcrypt |
-| Styling | Vanilla CSS |
-| Testing | Jest |
-
----
-
-## Project Structure
-
-```
-community-guardian/
-├── client/                # React + TypeScript frontend
-│   └── src/
-│       ├── components/    # Navbar, AlertCard, SearchFilter
-│       ├── context/       # Auth context
-│       ├── pages/         # Dashboard, Alerts, Digest, SafeCircles, etc.
-│       ├── services/      # API service layer
-│       └── types/         # TypeScript definitions
-│
-├── server/                # Node.js + Express backend
-│   └── src/
-│       ├── config/        # Database connection
-│       ├── lib/           # AI integration, fallback, encryption
-│       ├── middleware/     # Auth, validation, rate limiting
-│       ├── models/        # Mongoose schemas
-│       ├── routes/        # API endpoints
-│       └── schemas/       # Zod validation schemas
-│
-├── data/                  # Synthetic mock data (JSON)
-└── __tests__/             # Jest test suite
-```
-
-## Getting Started
-
-### 1. Clone & Install
-
+### Run Commands:
 ```bash
-# Install backend dependencies
+# Terminal 1: Backend
 cd server
 npm install
+npm run seed  # Populates demo data
+npm run dev
 
-# Install frontend dependencies
-cd ../client
+# Terminal 2: Frontend
+cd client
 npm install
+npm run dev
 ```
 
-### 2. Configure Environment
-
-**Backend (`server/.env`):**
-- `MONGO_URI`: MongoDB connection string
-- `JWT_SECRET`: Secure random string
-- `GEMINI_API_KEY`: Get from Google AI Studio
-- `ENCRYPTION_KEY`: 64-character hex string (for Safe Circles)
-- `FRONTEND_URL`: `http://localhost:5173` (Dev) or Vercel URL (Prod)
-
-**Frontend (`client/.env`):**
-- `VITE_API_URL`: `http://localhost:5000/api` (Dev) or Render URL (Prod)
-
-### 3. Seed Database (Demo Mode)
-
-To populate the app with realistic data for a demo:
-```bash
-cd server
-npm run seed
-```
-
-### 4. Run
-
-```bash
-# Terminal 1 (Backend)
-cd server && npm run dev
-
-# Terminal 2 (Frontend)
-cd client && npm run dev
-```
-
----
-
-## Deployment
-
-### Frontend (Vercel)
-1. Add a new project on Vercel and point it to the `client/` directory.
-2. Set Environment Variables (`VITE_API_URL`).
-3. Vercel will automatically use `vercel.json` for routing.
-
-### Backend (Render)
-1. Create a "Web Service" on Render and point it to the `server/` directory.
-2. Build Command: `npm install`
-3. Start Command: `npm start`
-4. Set Environment Variables (`MONGO_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `ENCRYPTION_KEY`, `FRONTEND_URL`, `NODE_ENV=production`).
-
----
-
-## Tests
-
+### Test Commands:
 ```bash
 cd server
 npm test
 ```
 
-- **Test 1 (Happy Path)**: Verifies fallback categorization, checklists, and digest generation work correctly
-- **Test 2 (Edge Case)**: Simulates AI failure and verifies the system gracefully falls back to rule-based logic.
+---
+
+## AI Disclosure
+### Did you use an AI assistant? 
+**Yes** (ChatGPT & Gemini 2.5 Flash).
+
+### How did you verify the suggestions?
+*   **Unit Tests**: Created a full Jest suite to verify AI categorization and rule-based fallbacks.
+*   **Manual Testing**: Manually tested all AI-generated content for safety logic.
+*   **Used Postman**: Postman to test and verify API endpoints**
+*   **Security Audits**: Manually reviewed all AI-suggested security headers and cookie policies.
+*   **Functional Testing**: Manually verified every AI-generated checklist for safety logic.
+
+### Example of a suggestion you rejected or changed:
+I, initially, was suggested to incorporate using a 3rd party **Leaflet/Google Maps API** for geolocation tracking. I **rejected** this to prioritize the "Privacy-First" pillar of the case challenge. Instead, I built a zero-tracking model based on user-selected neighborhoods (manual input), which achieved high contextual relevance without ever needing access to the user's live GPS coordinates.
+
 
 ---
 
-## Responsible AI
+## Tradeoffs & Prioritization
+### What did you cut to stay within the 4–6 hour limit?
+*   **WebSockets (Socket.io)**: I opted out of full Bi-directional WebSockets to minimize server-side state and dependencies. Instead, I implemented a **Smart Polling** system for real-time updates.
+*   **Profile Pictures**: Cut image upload/storage to focus on core security and AI features.
 
-- **Transparency**: Clear labeling of all AI-generated content.
-- **Safety First**: Proactive scanning for malicious content via "Scam Sense".
-- **Resilient UI**: High-maturity design using Lucide icons and glassmorphism (replacing all emojis for a professional Palo Alto Networks-aligned aesthetic).
-- **Privacy-First**: Zero-tracking model; contextual relevance achieved without user geolocation.
+### What would you build next if you had more time?
+*   **"Safety Buddy" Timer**: A feature where a user can set a timer (e.g., "15 mins walk home"). If they don't check in, an emergency AES-256 encrypted alert is instantly sent to their Safe Circles.
+*   **AI Scammer Simulation**: An educational tool where Gemini "acts" like a scammer to help users identify phishing patterns.
+*   **Real-time Push Notifications**: Implement a real-time notifications system using websockets.
+
+### Known limitations:
+*   **Single-Hood Focus**: Currently, a user can only be part of one neighborhood at a time.
+*   **Smart Polling**: The dashboard and feed refresh every 30 seconds; while highly reactive, it lacks the sub-second immediacy of full WebSockets.

@@ -132,6 +132,7 @@ export interface CircleMember {
 
 export interface DigestResponse {
   digest: string;
+  actionableSteps: DigestActionableStep[];
   source: 'ai' | 'rule-based';
   meta: {
     location: string;
@@ -139,6 +140,14 @@ export interface DigestResponse {
     alertCount: number;
     generatedAt: string;
   };
+}
+
+export interface DigestActionableStep {
+  alertId: string;
+  title: string;
+  category: AlertCategory;
+  steps: string[];
+  source: 'ai' | 'rule-based';
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────

@@ -83,6 +83,29 @@ export default function Digest() {
             <div className="digest-content">{digest.digest}</div>
           </div>
 
+          {digest.actionableSteps && digest.actionableSteps.length > 0 && (
+            <div className="card" style={{ marginTop: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.75rem' }}>
+                Actionable Steps
+              </h3>
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {digest.actionableSteps.map(item => (
+                  <div key={item.alertId} style={{ padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                    <div style={{ fontWeight: 600, marginBottom: '0.5rem' }}>{item.title}</div>
+                    <ul className="checklist" style={{ margin: 0 }}>
+                      {item.steps.map((step, i) => (
+                        <li key={i} className="checklist-item">
+                          <span className="checklist-number">{i + 1}</span>
+                          <span className="checklist-text">{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
             <button className="btn btn-primary" onClick={generateDigest} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <RefreshCw size={16} { ...loading ? { className: 'spinning' } : {} } /> Refresh Digest
