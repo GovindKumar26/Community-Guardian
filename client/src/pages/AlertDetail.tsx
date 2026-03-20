@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { alertsAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { CATEGORIES } from '../types';
 import type { Alert } from '../types';
-import { Share2 } from 'lucide-react';
+import { Share2, AlertCircle, Info, CheckCircle, CheckCircle2, User, Sparkles, ClipboardList, MapPin, Calendar, Search, Shield } from 'lucide-react';
 import ShareAlertModal from '../components/ShareAlertModal';
+import CategoryIcon from '../components/CategoryIcon';
 
 export default function AlertDetail() {
   const { id } = useParams<{ id: string }>();
@@ -106,30 +107,31 @@ export default function AlertDetail() {
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
           <span className={`badge badge-severity-${alert.severity}`}>
-            {alert.severity === 'critical' ? '🔴' : alert.severity === 'high' ? '🟠' : alert.severity === 'medium' ? '🟡' : '🟢'} {alert.severity}
+            {alert.severity === 'critical' ? <AlertCircle size={12} /> : alert.severity === 'high' ? <AlertCircle size={12} /> : alert.severity === 'medium' ? <Info size={12} /> : <CheckCircle size={12} />} {alert.severity}
           </span>
-          <span className={`badge badge-cat-${alert.category}`}>{category?.icon} {category?.label}</span>
-          {alert.verified ? <span className="badge badge-verified">✅ Verified</span> : <span className="badge badge-community">👤 Community Report</span>}
+          <span className={`badge badge-cat-${alert.category}`}>{category && <CategoryIcon name={category.icon} size={12} />} {category?.label}</span>
+          {alert.verified ? <span className="badge badge-verified"><CheckCircle2 size={12} /> Verified</span> : <span className="badge badge-community"><User size={12} /> Community Report</span>}
           <span className={`badge ${alert.aiSource === 'ai' ? 'badge-ai' : 'badge-rule'}`}>
-            {alert.aiSource === 'ai' ? '✨ AI-Generated' : '📋 Rule-Based'}
+            {alert.aiSource === 'ai' ? <Sparkles size={12} /> : <ClipboardList size={12} />} {alert.aiSource === 'ai' ? 'AI-Generated' : 'Rule-Based'}
           </span>
           <span className={`badge ${alert.status === 'resolved' ? 'badge-verified' : 'badge-community'}`}>
-            {alert.status === 'resolved' ? '✓ Resolved' : alert.status === 'under_review' ? '🔍 Under Review' : '● Active'}
+            {alert.status === 'resolved' ? <CheckCircle2 size={12} /> : alert.status === 'under_review' ? <Search size={12} /> : <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}
+            {' '}{alert.status === 'resolved' ? 'Resolved' : alert.status === 'under_review' ? 'Under Review' : 'Active'}
           </span>
         </div>
 
         <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.75rem' }}>{alert.title}</h1>
 
         <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-          <span>📍 {alert.location}</span>
-          <span>📅 {new Date(alert.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          {alert.submittedBy && <span>👤 Reported by {alert.submittedBy.name}</span>}
+          <span><MapPin size={14} /> {alert.location}</span>
+          <span><Calendar size={14} /> {new Date(alert.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          {alert.submittedBy && <span><User size={14} /> Reported by {alert.submittedBy.name}</span>}
         </div>
 
         {alert.aiSummary && (
           <div style={{ background: 'var(--primary-bg)', padding: '1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
             <strong style={{ fontSize: '0.8125rem', color: 'var(--primary)' }}>
-              {alert.aiSource === 'ai' ? '✨ AI Summary' : '📋 Summary'}
+              {alert.aiSource === 'ai' ? <Sparkles size={12} /> : <ClipboardList size={12} />} {alert.aiSource === 'ai' ? 'AI Summary' : 'Summary'}
             </strong>
             <p style={{ marginTop: '0.375rem', fontSize: '0.9375rem' }}>{alert.aiSummary}</p>
           </div>
@@ -162,8 +164,8 @@ export default function AlertDetail() {
             </div>
             
             {verifyCount >= 3 && (
-              <span style={{ fontSize: '0.75rem', color: 'var(--accent)', marginLeft: '0.5rem' }}>
-                ✅ Community verified
+              <span style={{ fontSize: '0.75rem', color: 'var(--accent)', marginLeft: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <CheckCircle2 size={12} /> Community verified
               </span>
             )}
 
@@ -183,10 +185,10 @@ export default function AlertDetail() {
         {isOwner && alert.status !== 'resolved' && (
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
             <button className="btn btn-success btn-sm" disabled={updating} onClick={() => handleStatusUpdate('resolved')}>
-              ✓ Mark Resolved
+              <CheckCircle2 size={14} /> Mark Resolved
             </button>
             <button className="btn btn-secondary btn-sm" disabled={updating} onClick={() => handleStatusUpdate('under_review')}>
-              🔍 Under Review
+              <Search size={14} /> Under Review
             </button>
           </div>
         )}
@@ -195,8 +197,8 @@ export default function AlertDetail() {
       {/* Actionable Steps */}
       {alert.actionableSteps && alert.actionableSteps.length > 0 && (
         <div className="card">
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>
-            🛡️ Recommended Actions
+          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Shield size={18} /> Recommended Actions
           </h2>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
             Here's what you can do to stay safe and in control:

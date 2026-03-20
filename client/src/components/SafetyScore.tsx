@@ -1,4 +1,5 @@
 import type { AlertStats } from '../types';
+import { ShieldCheck, CheckCircle2, AlertTriangle, AlertCircle, ShieldAlert } from 'lucide-react';
 
 interface Props {
   stats: AlertStats;
@@ -44,25 +45,25 @@ function calculateScore(stats: AlertStats): number {
   return Math.max(0, Math.min(100, Math.round(score)));
 }
 
-function getScoreInfo(score: number): { label: string; color: string; emoji: string; message: string } {
+function getScoreInfo(score: number): { label: string; color: string; icon: React.ReactNode; message: string } {
   if (score >= 85) return {
-    label: 'Excellent', color: '#22c55e', emoji: '🛡️',
+    label: 'Excellent', color: '#22c55e', icon: <ShieldCheck size={18} />,
     message: 'Your neighborhood is very safe right now.'
   };
   if (score >= 70) return {
-    label: 'Good', color: '#3b82f6', emoji: '✅',
+    label: 'Good', color: '#3b82f6', icon: <CheckCircle2 size={18} />,
     message: 'Things are mostly calm. Stay aware.'
   };
   if (score >= 50) return {
-    label: 'Moderate', color: '#f59e0b', emoji: '⚠️',
+    label: 'Moderate', color: '#f59e0b', icon: <AlertTriangle size={18} />,
     message: 'Some activity in your area. Stay informed.'
   };
   if (score >= 30) return {
-    label: 'Elevated', color: '#f97316', emoji: '🔶',
+    label: 'Elevated', color: '#f97316', icon: <AlertCircle size={18} />,
     message: 'Increased activity. Review active alerts.'
   };
   return {
-    label: 'High Alert', color: '#ef4444', emoji: '🔴',
+    label: 'High Alert', color: '#ef4444', icon: <ShieldAlert size={18} />,
     message: 'Multiple active concerns. Stay vigilant and check alerts.'
   };
 }
@@ -107,8 +108,8 @@ export default function SafetyScore({ stats, location }: Props) {
       </div>
 
       <div className="safety-score-info">
-        <div className="safety-score-label" style={{ color: info.color }}>
-          {info.emoji} {info.label}
+        <div className="safety-score-label" style={{ color: info.color, display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          {info.icon} {info.label}
         </div>
         <div className="safety-score-location">
           Shield Strength • {location}

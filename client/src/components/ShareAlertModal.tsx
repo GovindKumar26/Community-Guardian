@@ -51,7 +51,7 @@ export default function ShareAlertModal({ isOpen, onClose, alert }: Props) {
       setTimeout(() => {
         onClose();
       }, 1500);
-    } catch (err) {
+    } catch {
       setError('Failed to share alert.');
     } finally {
       setSharingTo(null);

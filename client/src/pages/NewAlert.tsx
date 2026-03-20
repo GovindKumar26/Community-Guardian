@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { alertsAPI } from '../services/api';
 import { CATEGORIES, LOCATIONS, SEVERITIES } from '../types';
+import { CheckCircle2, Shield, Sparkles, ClipboardList, FilePlus } from 'lucide-react';
+import CategoryIcon from '../components/CategoryIcon';
 import type { ActionableReport } from '../types';
 
 export default function NewAlert() {
@@ -34,8 +37,10 @@ export default function NewAlert() {
     try {
       const res = await alertsAPI.create(form);
       setReport(res.data.actionableReport);
-    } catch (err: any) {
-      const msg = err.response?.data?.message || err.response?.data?.details?.[0]?.message || 'Failed to submit alert.';
+    } catch (err: unknown) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      const detailsMessage = axios.isAxiosError(err) ? err.response?.data?.details?.[0]?.message : null;
+      const msg = message || detailsMessage || 'Failed to submit alert.';
       setApiError(msg);
     } finally {
       setSubmitting(false);
@@ -46,13 +51,13 @@ export default function NewAlert() {
   if (report) {
     return (
       <div className="page container">
-        <div className="success-banner" style={{ fontSize: '1rem' }}>
-          ✅ Your incident has been submitted and shared with the community.
+        <div className="success-banner" style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <CheckCircle2 size={18} /> Your incident has been submitted and shared with the community.
         </div>
 
         <div className="card" style={{ marginBottom: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-            🛡️ Your Actionable Safety Report
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Shield size={24} /> Your Actionable Safety Report
           </h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.9375rem' }}>
             {report.summary}
@@ -60,11 +65,12 @@ export default function NewAlert() {
 
           <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
             <span className={`badge ${report.source === 'ai' ? 'badge-ai' : 'badge-rule'}`}>
-              {report.source === 'ai' ? '✨ AI-Generated Report' : '📋 Rule-Based Report'}
+              {report.source === 'ai' ? <Sparkles size={12} /> : <ClipboardList size={12} />}
+              {' '}{report.source === 'ai' ? 'AI-Generated Report' : 'Rule-Based Report'}
             </span>
             <span className={`badge badge-cat-${report.categorization.category}`}>
-              {CATEGORIES.find(c => c.value === report.categorization.category)?.icon}{' '}
-              {CATEGORIES.find(c => c.value === report.categorization.category)?.label}
+              <CategoryIcon name={CATEGORIES.find(c => c.value === report.categorization.category)?.icon || ''} size={12} />
+              {' '}{CATEGORIES.find(c => c.value === report.categorization.category)?.label}
             </span>
           </div>
 
@@ -92,7 +98,10 @@ export default function NewAlert() {
   return (
     <div className="page container">
       <div className="page-header">
-        <h1>📝 Report an Incident</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <FilePlus size={32} />
+          Report an Incident
+        </h1>
         <p>Submit a safety concern. Our AI will analyze it and provide you with actionable steps.</p>
       </div>
 
@@ -119,7 +128,7 @@ export default function NewAlert() {
               <label htmlFor="category">Category *</label>
               <select id="category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                 <option value="">Select category</option>
-                {CATEGORIES.map(c => (<option key={c.value} value={c.value}>{c.icon} {c.label}</option>))}
+                {CATEGORIES.map(c => (<option key={c.value} value={c.value}>{c.label}</option>))}
               </select>
               {errors.category && <div className="form-error">{errors.category}</div>}
             </div>
@@ -127,7 +136,7 @@ export default function NewAlert() {
               <label htmlFor="location">Location *</label>
               <select id="location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })}>
                 <option value="">Select neighborhood</option>
-                {LOCATIONS.map(loc => (<option key={loc} value={loc}>📍 {loc}</option>))}
+                {LOCATIONS.map(loc => (<option key={loc} value={loc}>{loc}</option>))}
               </select>
               {errors.location && <div className="form-error">{errors.location}</div>}
             </div>
@@ -142,8 +151,8 @@ export default function NewAlert() {
             {errors.severity && <div className="form-error">{errors.severity}</div>}
           </div>
 
-          <button type="submit" className="btn btn-primary btn-lg" disabled={submitting} style={{ width: '100%', justifyContent: 'center' }}>
-            {submitting ? 'Analyzing with AI...' : '🛡️ Submit & Get Safety Report'}
+          <button type="submit" className="btn btn-primary btn-lg" disabled={submitting} style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {submitting ? 'Analyzing with AI...' : <><Shield size={20} /> Submit & Get Safety Report</>}
           </button>
         </form>
       </div>

@@ -4,18 +4,18 @@ This document provides a deep dive into the architecture, data models, and funct
 
 ---
 
-## 🏗️ High-Level Architecture
+## High-Level Architecture
 
 Community Guardian is built on a modern **MERN-adjacent** stack optimized for performance, security, and AI integration.
 
-*   **Frontend**: React 18 (Vite) + TypeScript. Uses a "Calm UI" design system with vanilla CSS, glassmorphism, and Lucide icons.
+*   **Frontend**: React 18 (Vite) + TypeScript. Uses a professional "Calm UI" design system with vanilla CSS, glassmorphism, and consistent Lucide iconography (replacing all emojis for a more mature, Palo Alto Networks-aligned aesthetic).
 *   **Backend**: Node.js + Express. Stateless REST API following a controller-less pattern using middleware for validation and auth.
 *   **Database**: MongoDB (Mongoose). Document-oriented storage for flexible alert schemas.
 *   **AI Engine**: Google Gemini 2.5 Flash via `@google/generative-ai`. Implements a graceful rule-based fallback system.
 
 ---
 
-## 📊 Data Models
+## Data Models
 
 ### 1. User ([User.js](file:///c:/Users/admin/Community%20Guardian/server/src/models/User.js))
 *   **Core**: Name, Email (unique), Password (hashed with `bcrypt`).
@@ -31,29 +31,32 @@ Community Guardian is built on a modern **MERN-adjacent** stack optimized for pe
 
 ### 3. Safe Circle ([SafeCircle.js](file:///c:/Users/admin/Community%20Guardian/server/src/models/SafeCircle.js))
 *   **Trusted Network**: `name`, `members` (Array of User IDs), `createdBy` (User ID).
-*   **Encrypted Messages**: Sub-document schema storing `encryptedContent` and the unique [iv](file:///c:/Users/admin/Community%20Guardian/client/src/components/Navbar.tsx#14-15) (Initialization Vector) for each message.
+*   **Encrypted Messages**: Sub-document schema storing `encryptedContent` and the unique initialization vector (IV) for each message.
 
 ---
 
-## 🔒 Security Infrastructure
+## Security Infrastructure
 
 1.  **Authentication**:
-    *   **JWT via HTTP-Only Cookies**: Tokens are never stored in `localStorage` (preventing XSS data theft). They are stored in a `Secure`, `SameSite=Strict` cookie.
+    *   **JWT via HTTP-Only Cookies**: Tokens are stored in **Secure, SameSite=None** cookies in production to allow cross-domain communication between Vercel and Render while blocking XSS theft.
     *   **Soft Lockout**: Accounts lock for 15 minutes after 5 consecutive failed attempts.
 2.  **Encryption**:
-    *   **AES-256-CBC**: Used for Safe Circle messages. The `ENCRYPTION_KEY` is a 64-character hex string. Every message has a unique [iv](file:///c:/Users/admin/Community%20Guardian/client/src/components/Navbar.tsx#14-15) ensuring the same text produces different ciphertext.
-3.  **Content Security Policy (CSP)**:
-    *   Strict zero-trust policy via `helmet`. Disables all inline scripts, external objects, and framing to mitigate XSS and clickjacking.
-4.  **Data Sanitization**:
-    *   `express-mongo-sanitize` prevents NoSQL injection attacks by stripping `$` and `.` from inputs.
+    *   **AES-256-CBC**: Used for Safe Circle messages. The `ENCRYPTION_KEY` is a 64-character hex string. Every message has a unique initialization vector (IV).
+3.  **Proactive Security**:
+    *   **AI Scam Sense**: Proactively scans all alerts for phishing/scam patterns and auto-flags them for moderation.
+    *   **Stealth Honeypot**: Hidden registration field that traps and blocks automated bot registrations without alerting the bot.
+4.  **Content Security Policy (CSP)**:
+    *   Strict zero-trust policy via `helmet` that mitigates XSS and clickjacking.
+5.  **Data Sanitization**:
+    *   `express-mongo-sanitize` prevents NoSQL injection attacks.
 
 ---
 
-## 🧠 Core Functional Flows
+## Core Functional Flows
 
 ### 1. The Alert Lifecycle
 1.  **Submission**: User posts an incident.
-2.  **AI Processing**: The backend runs [categorizeAlert](file:///c:/Users/admin/Community%20Guardian/server/src/lib/ai.js#29-76), [summarizeAlert](file:///c:/Users/admin/Community%20Guardian/server/src/lib/ai.js#120-153), and [generateChecklist](file:///c:/Users/admin/Community%20Guardian/server/src/lib/ai.js#77-119) in parallel via `Promise.all`.
+2.  **AI Processing**: The backend runs categorization, summarization, and checklist generation in parallel via `Promise.all`.
 3.  **Enrichment**: The alert is saved with AI-generated actionable steps and a calm summary.
 4.  **Community Vouching**:
     *   Users click **Verify** or **Flag**.
@@ -68,13 +71,12 @@ Community Guardian is built on a modern **MERN-adjacent** stack optimized for pe
 
 ### 3. Encrypted Sharing
 1.  User clicks "Share" on an alert.
-2.  [ShareAlertModal](file:///c:/Users/admin/Community%20Guardian/client/src/components/ShareAlertModal.tsx#13-167) (rendered via **React Portal**) fetches Safe Circles.
-3.  Message is encrypted on the server with a unique IV before being saved.
-4.  Members can only view decrypted messages after passing through the [protect](file:///c:/Users/admin/Community%20Guardian/server/src/middleware/auth.js#4-60) middleware.
+2.  Message is encrypted on the server with a unique IV before being saved.
+3.  Members can only view decrypted messages after passing through the authorization middleware.
 
 ---
 
-## 📡 API Routes Reference
+## API Routes Reference
 
 | Route | Method | Auth | Description |
 |---|---|---|---|
@@ -86,6 +88,6 @@ Community Guardian is built on a modern **MERN-adjacent** stack optimized for pe
 
 ---
 
-## 🧪 Testing State
+## Testing State
 *   **API Tests**: Passing (Zod validation, Auth guards, AI fallbacks).
-*   **Frontend Quality**: 0 TypeScript errors, WCAG color contrast compliant (thanks to recent fixes!), 100% responsive.
+*   **Frontend Quality**: 0 TypeScript errors, WCAG color contrast compliant, 100% responsive.

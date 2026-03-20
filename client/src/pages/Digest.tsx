@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import { useAuth } from '../context/useAuth';
 import { digestAPI } from '../services/api';
+import { ClipboardList, Shield, Sparkles, ShieldCheck, RefreshCw } from 'lucide-react';
 import type { DigestResponse } from '../types';
 
 export default function Digest() {
@@ -15,8 +17,9 @@ export default function Digest() {
     try {
       const res = await digestAPI.generate();
       setDigest(res.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to generate digest.');
+    } catch (err: unknown) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      setError(message || 'Failed to generate digest.');
     } finally {
       setLoading(false);
     }
@@ -25,7 +28,10 @@ export default function Digest() {
   return (
     <div className="page container">
       <div className="page-header">
-        <h1>📋 Your Safety Digest</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <ClipboardList size={32} />
+          Your Safety Digest
+        </h1>
         <p>
           A personalized, AI-generated summary of safety alerts in{' '}
           <strong>{user?.selectedArea || 'your area'}</strong>, tailored to your preferences.
@@ -34,13 +40,15 @@ export default function Digest() {
 
       {!digest && !loading && (
         <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛡️</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+            <Shield size={48} />
+          </div>
           <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Ready to see your safety summary?</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             Our AI will analyze active alerts in {user?.selectedArea} and create a calm, personalized digest for you.
           </p>
-          <button className="btn btn-primary btn-lg" onClick={generateDigest}>
-            ✨ Generate My Digest
+          <button className="btn btn-primary btn-lg" onClick={generateDigest} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 auto' }}>
+            <Sparkles size={18} /> Generate My Digest
           </button>
         </div>
       )}
@@ -59,9 +67,12 @@ export default function Digest() {
         <>
           <div className="digest-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <h2 style={{ margin: 0 }}>🛡️ Safety Digest for {digest.meta.location}</h2>
+              <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <ShieldCheck size={24} /> Safety Digest for {digest.meta.location}
+              </h2>
               <span className={`badge ${digest.source === 'ai' ? 'badge-ai' : 'badge-rule'}`}>
-                {digest.source === 'ai' ? '✨ AI-Generated' : '📋 Rule-Based'}
+                {digest.source === 'ai' ? <Sparkles size={12} /> : <ClipboardList size={12} />}
+                {' '}{digest.source === 'ai' ? 'AI-Generated' : 'Rule-Based'}
               </span>
             </div>
 
@@ -73,8 +84,8 @@ export default function Digest() {
           </div>
 
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
-            <button className="btn btn-primary" onClick={generateDigest}>
-              🔄 Refresh Digest
+            <button className="btn btn-primary" onClick={generateDigest} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <RefreshCw size={16} { ...loading ? { className: 'spinning' } : {} } /> Refresh Digest
             </button>
           </div>
         </>

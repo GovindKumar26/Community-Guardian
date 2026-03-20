@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { CATEGORIES, LOCATIONS } from '../types';
 
 export default function Login() {
@@ -18,8 +19,9 @@ export default function Login() {
     try {
       await login(form.email, form.password);
       navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } catch (err: unknown) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      setError(message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -102,8 +104,9 @@ export function Register() {
     try {
       await register(form);
       navigate('/');
-    } catch (err: any) {
-      setApiError(err.response?.data?.message || 'Registration failed.');
+    } catch (err: unknown) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      setApiError(message || 'Registration failed.');
     } finally {
       setLoading(false);
     }

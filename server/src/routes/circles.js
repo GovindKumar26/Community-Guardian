@@ -173,7 +173,7 @@ router.post('/:id/messages', protect, validate(sendMessageSchema), async (req, r
 
     res.status(201).json({
         message: isEmergency
-            ? '🚨 Emergency alert sent to your circle.'
+            ? 'Emergency alert sent to your circle.'
             : 'Message sent to your circle.',
         sentMessage: {
             content, // Return plaintext to sender

@@ -1,0 +1,28 @@
+import { useEffect, useRef } from 'react';
+
+/**
+ * A custom hook for safe intervals in React, handling stale closures
+ * and automatically pausing/resuming on component mount/unmount.
+ * Based on Dan Abramov's canonical implementation.
+ */
+export function useInterval(callback: () => void, delay: number | null) {
+  const savedCallback = useRef<() => void>(null);
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      if (savedCallback.current) {
+        savedCallback.current();
+      }
+    }
+    if (delay !== null) {
+      const id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}

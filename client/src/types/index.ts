@@ -114,6 +114,20 @@ export interface CircleMessage {
   createdAt: string;
 }
 
+export interface SentCircleMessage {
+  _id?: string;
+  sender: { _id: string; name: string };
+  content: string;
+  isEmergency: boolean;
+  createdAt: string;
+}
+
+export interface CircleMember {
+  id: string;
+  name: string;
+  email: string;
+}
+
 // ─── Digest Types ────────────────────────────────────────────────────────────
 
 export interface DigestResponse {
@@ -130,12 +144,12 @@ export interface DigestResponse {
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 export const CATEGORIES: { value: AlertCategory; label: string; icon: string }[] = [
-  { value: 'crime', label: 'Crime & Safety', icon: '🚨' },
-  { value: 'scam', label: 'Scam Alert', icon: '⚠️' },
-  { value: 'digital_threat', label: 'Digital Threat', icon: '🔒' },
-  { value: 'hazard', label: 'Hazard', icon: '🚧' },
-  { value: 'weather', label: 'Weather', icon: '🌦️' },
-  { value: 'health', label: 'Health', icon: '🏥' },
+  { value: 'crime', label: 'Crime & Safety', icon: 'ShieldAlert' },
+  { value: 'scam', label: 'Scam Alert', icon: 'AlertTriangle' },
+  { value: 'digital_threat', label: 'Digital Threat', icon: 'GlobeLock' },
+  { value: 'hazard', label: 'Hazard', icon: 'Construction' },
+  { value: 'weather', label: 'Weather', icon: 'CloudRain' },
+  { value: 'health', label: 'Health', icon: 'Stethoscope' },
 ];
 
 export const LOCATIONS: Location[] = [

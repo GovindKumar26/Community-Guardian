@@ -197,7 +197,7 @@ Create a digest that is:
 3. Each alert gets a brief 1-line summary
 4. End with a reassuring note
 
-Use emojis sparingly but effectively (🛡️ 🔒 ⚠️ ✅).
+Do NOT use emojis. Use clean, readable text.
 Format as clean, readable text (not JSON).`;
 
         const result = await ai.generateContent(prompt);

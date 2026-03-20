@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type {
   AlertsResponse, Alert, AlertCreateResponse, AlertStats,
-  AuthResponse, User, SafeCircle, DigestResponse, VouchResponse
+  AuthResponse, User, SafeCircle, DigestResponse, VouchResponse,
+  SentCircleMessage, CircleMember
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -92,10 +93,10 @@ export const circlesAPI = {
     api.post<{ message: string; circle: SafeCircle }>('/circles', data),
 
   sendMessage: (circleId: string, data: { content: string; isEmergency: boolean }) =>
-    api.post<{ message: string; sentMessage: any }>(`/circles/${circleId}/messages`, data),
+    api.post<{ message: string; sentMessage: SentCircleMessage }>(`/circles/${circleId}/messages`, data),
 
   addMember: (circleId: string, email: string) =>
-    api.post<{ message: string; member: any }>(`/circles/${circleId}/members`, { email }),
+    api.post<{ message: string; member: CircleMember }>(`/circles/${circleId}/members`, { email }),
 };
 
 export default api;

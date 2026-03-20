@@ -1,4 +1,4 @@
-# 🛡️ Community Guardian
+# Community Guardian
 
 **Community Safety & Digital Wellness Platform**
 
@@ -6,7 +6,7 @@ A calm, AI-powered platform that aggregates community safety and digital securit
 
 ---
 
-## 🎯 Problem Statement
+## Problem Statement
 
 As digital and physical security threats become more complex, individuals struggle to keep up with relevant safety information. Information is scattered across news sites and social media, leading to alert fatigue or unnecessary anxiety without actionable steps.
 
@@ -14,7 +14,7 @@ As digital and physical security threats become more complex, individuals strugg
 
 ---
 
-## ✅ Features
+## Features
 
 ### Core Features
 - **Safety Alert Dashboard** — AI-processed, filtered alerts organized by severity and category
@@ -26,7 +26,7 @@ As digital and physical security threats become more complex, individuals strugg
 ### AI Integration + Fallback
 - **AI**: Google Gemini API for categorization, summarization, and checklist generation
 - **Fallback**: Rule-based keyword matching + pre-built templates when AI is unavailable
-- **Transparency**: UI badges show "✨ AI-Generated" vs "📋 Rule-Based" for every result
+- **Transparency**: UI badges show "AI-Generated" vs "Rule-Based" for every result
 
 ### Security & Trust
 - **AI Scam Sense** — Proactive Gemini-driven scanning to auto-flag potential scams/phishing
@@ -38,7 +38,7 @@ As digital and physical security threats become more complex, individuals strugg
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -53,7 +53,7 @@ As digital and physical security threats become more complex, individuals strugg
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 community-guardian/
@@ -78,7 +78,7 @@ community-guardian/
 └── __tests__/             # Jest test suite
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone & Install
 
@@ -124,7 +124,7 @@ cd client && npm run dev
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Frontend (Vercel)
 1. Add a new project on Vercel and point it to the `client/` directory.
@@ -139,7 +139,7 @@ cd client && npm run dev
 
 ---
 
-## 🧪 Tests
+## Tests
 
 ```bash
 cd server
@@ -151,9 +151,9 @@ npm test
 
 ---
 
-## ⚖️ Responsible AI
+## Responsible AI
 
 - **Transparency**: Clear labeling of all AI-generated content.
 - **Safety First**: Proactive scanning for malicious content via "Scam Sense".
-- **Resilience**: Robust code-based fallbacks ensure the platform works even during API outages.
-- **Privacy**: No tracking; contextual relevance achieved without geolocation.
+- **Resilient UI**: High-maturity design using Lucide icons and glassmorphism (replacing all emojis for a professional Palo Alto Networks-aligned aesthetic).
+- **Privacy-First**: Zero-tracking model; contextual relevance achieved without user geolocation.

@@ -2,10 +2,11 @@ import { useState } from 'react';
 import type { Alert } from '../types';
 import { CATEGORIES } from '../types';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { alertsAPI } from '../services/api';
-import { Share2 } from 'lucide-react';
+import { Share2, MapPin, User, Sparkles, ClipboardList, AlertCircle, Info, CheckCircle, CheckCircle2 } from 'lucide-react';
 import ShareAlertModal from './ShareAlertModal';
+import CategoryIcon from './CategoryIcon';
 
 interface Props {
   alert: Alert;
@@ -78,21 +79,22 @@ export default function AlertCard({ alert, onVouchUpdate }: Props) {
 
       <div className="alert-card-badges">
         <span className={`badge badge-severity-${alert.severity}`}>
-          {alert.severity === 'critical' ? '🔴' :
-           alert.severity === 'high' ? '🟠' :
-           alert.severity === 'medium' ? '🟡' : '🟢'}
+          {alert.severity === 'critical' ? <AlertCircle size={12} /> :
+           alert.severity === 'high' ? <AlertCircle size={12} /> :
+           alert.severity === 'medium' ? <Info size={12} /> : <CheckCircle size={12} />}
           {' '}{alert.severity}
         </span>
         <span className={`badge badge-cat-${alert.category}`}>
-          {category?.icon} {category?.label}
+          {category && <CategoryIcon name={category.icon} size={12} />} {category?.label}
         </span>
         {alert.verified ? (
-          <span className="badge badge-verified">✅ Verified</span>
+          <span className="badge badge-verified"><CheckCircle2 size={12} /> Verified</span>
         ) : (
-          <span className="badge badge-community">👤 Community</span>
+          <span className="badge badge-community"><User size={12} /> Community</span>
         )}
         <span className={`badge ${alert.aiSource === 'ai' ? 'badge-ai' : 'badge-rule'}`}>
-          {alert.aiSource === 'ai' ? '✨ AI' : '📋 Rule-based'}
+          {alert.aiSource === 'ai' ? <Sparkles size={12} /> : <ClipboardList size={12} />}
+          {' '}{alert.aiSource === 'ai' ? 'AI' : 'Rule-based'}
         </span>
       </div>
 
@@ -102,11 +104,11 @@ export default function AlertCard({ alert, onVouchUpdate }: Props) {
 
       <div className="alert-card-footer">
         <div className="alert-card-meta">
-          <span>📍 {alert.location}</span>
+          <span><MapPin size={12} /> {alert.location}</span>
           <span>{formatDate(alert.date)}</span>
         </div>
         {alert.status === 'resolved' && (
-          <span className="badge badge-verified">✓ Resolved</span>
+          <span className="badge badge-verified"><CheckCircle2 size={12} /> Resolved</span>
         )}
       </div>
 
@@ -149,10 +151,10 @@ export default function AlertCard({ alert, onVouchUpdate }: Props) {
 
       {/* Share Modal */}
       {user && (
-        <ShareAlertModal 
-          isOpen={isShareOpen} 
-          onClose={() => setIsShareOpen(false)} 
-          alert={alert} 
+        <ShareAlertModal
+          isOpen={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          alert={alert}
         />
       )}
     </div>

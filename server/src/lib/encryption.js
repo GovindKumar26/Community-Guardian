@@ -15,7 +15,7 @@ function getKey() {
     if (process.env.NODE_ENV === 'production') {
         throw new Error('ENCRYPTION_KEY must be set in production (64 hex characters)');
     }
-    console.warn('⚠ Using derived encryption key — set ENCRYPTION_KEY in .env for production');
+    console.warn('WARNING: Using derived encryption key — set ENCRYPTION_KEY in .env for production');
     return crypto.scryptSync('community-guardian-dev-key', 'salt', 32);
 }
 

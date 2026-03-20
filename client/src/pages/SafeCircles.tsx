@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { circlesAPI } from '../services/api';
+import { Lock, Plus, X, User } from 'lucide-react';
 import type { SafeCircle } from '../types';
 
 export default function SafeCircles() {
@@ -37,15 +39,19 @@ export default function SafeCircles() {
       setForm({ name: '', memberEmails: '' });
       setSuccess('Safe Circle created!');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create circle.');
+    } catch (err: unknown) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      setError(message || 'Failed to create circle.');
     } finally { setCreating(false); }
   };
 
   return (
     <div className="page container">
       <div className="page-header">
-        <h1>🔒 Safe Circles</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Lock size={32} />
+          Safe Circles
+        </h1>
         <p>Create a trusted group of guardians for encrypted emergency communication.</p>
       </div>
 
@@ -53,8 +59,8 @@ export default function SafeCircles() {
       {success && <div className="success-banner">{success}</div>}
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <button className="btn btn-primary" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? '✕ Cancel' : '+ Create New Circle'}
+        <button className="btn btn-primary" onClick={() => setShowCreate(!showCreate)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {showCreate ? <><X size={18} /> Cancel</> : <><Plus size={18} /> Create New Circle</>}
         </button>
       </div>
 
@@ -75,8 +81,8 @@ export default function SafeCircles() {
                 Members must have a Community Guardian account.
               </div>
             </div>
-            <button type="submit" className="btn btn-success" disabled={creating}>
-              {creating ? 'Creating...' : '🔒 Create Circle'}
+            <button type="submit" className="btn btn-success" disabled={creating} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {creating ? 'Creating...' : <><Lock size={16} /> Create Circle</>}
             </button>
           </form>
         </div>
@@ -86,7 +92,7 @@ export default function SafeCircles() {
         <div className="loading"><div className="spinner" /> Loading circles...</div>
       ) : circles.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🔒</div>
+          <div className="empty-icon"><Lock size={48} /></div>
           <h3>No Safe Circles Yet</h3>
           <p>Create your first circle and add trusted guardians for emergency communication.</p>
         </div>
@@ -94,13 +100,17 @@ export default function SafeCircles() {
         <div className="alert-grid">
           {circles.map(circle => (
             <div key={circle._id} className="circle-card" onClick={() => navigate(`/circles/${circle._id}`)} style={{ cursor: 'pointer' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.25rem' }}>🔒 {circle.name}</h3>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Lock size={18} /> {circle.name}
+              </h3>
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
                 Created by {circle.createdBy.name} • {circle.members.length} member(s)
               </div>
               <div className="circle-members">
                 {circle.members.map(m => (
-                  <span key={m._id} className="member-chip">👤 {m.name}</span>
+                  <span key={m._id} className="member-chip" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <User size={12} /> {m.name}
+                  </span>
                 ))}
               </div>
             </div>

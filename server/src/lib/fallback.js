@@ -192,24 +192,24 @@ export function fallbackDigest(alerts, location) {
     }
 
     const categoryLabels = {
-        crime: '🚨 Crime & Safety',
-        scam: '⚠️ Scam Alerts',
-        digital_threat: '🔒 Digital Security',
-        hazard: '🚧 Hazards',
-        weather: '🌦️ Weather',
-        health: '🏥 Health'
+        crime: 'Crime & Safety',
+        scam: 'Scam Alerts',
+        digital_threat: 'Digital Security',
+        hazard: 'Hazards',
+        weather: 'Weather',
+        health: 'Health'
     };
 
-    let digest = `📋 Safety Digest for ${location}\n\n`;
+    let digest = `Safety Digest for ${location}\n\n`;
     digest += `${alerts.length} active alert(s) in your area.\n\n`;
 
     for (const [category, categoryAlerts] of Object.entries(grouped)) {
         const label = categoryLabels[category] || category;
         digest += `${label} (${categoryAlerts.length}):\n`;
         for (const alert of categoryAlerts.slice(0, 3)) {
-            const severityIcon = alert.severity === 'critical' ? '🔴' :
-                alert.severity === 'high' ? '🟠' :
-                    alert.severity === 'medium' ? '🟡' : '🟢';
+            const severityIcon = alert.severity === 'critical' ? '[CRITICAL]' :
+                alert.severity === 'high' ? '[HIGH]' :
+                    alert.severity === 'medium' ? '[MEDIUM]' : '[LOW]';
             digest += `  ${severityIcon} ${alert.title}\n`;
         }
         if (categoryAlerts.length > 3) {
